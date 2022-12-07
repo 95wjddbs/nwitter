@@ -1,48 +1,15 @@
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faGithub,
+  faGoogle,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 import { authService, firebaseInstance } from "fbase";
-import React, { useState } from "react";
+import AuthForm from "components/AuthForm";
 
 //인증 page
 const Auth = () => {
-  const [email, setEmail] = useState(""); // 이메일 입력
-  const [password, setPassword] = useState(""); // 비밀번호 입력
-  const [newAccount, setNewAccount] = useState(true); // 새 계정 생성
-  const [error, setError] = useState(""); // 에러 체크
-
-  //이메일, 비밀번호 구분하고, 변화를 위한 함수
-  const onChange = (event) => {
-    const {
-      target: { name, value },
-    } = event;
-    console.log(value);
-    if (name === "email") {
-      setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  // 로그인 제출 버튼을 위한 함수
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      let data;
-      if (newAccount) {
-        data = await authService.createUserWithEmailAndPassword(
-          email,
-          password
-        );
-      } else {
-        data = await authService.signInWithEmailAndPassword(email, password);
-      }
-      console.log(data);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  //새 계정인지 아닌지 판단을 위한 함수
-  const toggleAccount = () => setNewAccount((prev) => !prev);
-
   //소셜 로그인 (깃허브, 구글) 판단을 위한 함수
   const onSocialClick = (event) => {
     const {
@@ -58,39 +25,20 @@ const Auth = () => {
     console.log(data);
   };
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={onChange}
-        />
-        <input
-          type={"submit"}
-          value={newAccount ? "Create Account" : "Log In"}
-        />
-        {error}
-      </form>
-      <span onClick={toggleAccount}>
-        {newAccount ? "Sign in" : "Create Account"}
-      </span>
-      <div>
-        <button onClick={onSocialClick} name="google">
-          Continue with Google
+    <div className="authContainer">
+      <FontAwesomeIcon
+        icon={faTwitter}
+        color={"#04AAFF"}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
+      <AuthForm />
+      <div className="authBtns">
+        <button onClick={onSocialClick} className={"authBtn"} name="google">
+          Continue with Google <FontAwesomeIcon icon={faGoogle} />
         </button>
-        <button onClick={onSocialClick} name="github">
-          Continue with Github
+        <button onClick={onSocialClick} className={"authBtn"} name="github">
+          Continue with Github <FontAwesomeIcon icon={faGithub} />
         </button>
       </div>
     </div>
